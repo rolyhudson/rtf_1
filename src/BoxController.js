@@ -28,7 +28,7 @@ const ConeLines = ({ coneHeight, coneRadius }) => {
       const theta = (i / radialSegments) * Math.PI * 2;
       const x = coneRadius * Math.cos(theta);
       const z = coneRadius * Math.sin(theta);
-      const y = -coneHeight;
+      const y = coneHeight;
 
       // Push the tip vertex and the base vertex to create a line
       vertices.push(...tip, x, y, z);
@@ -39,7 +39,7 @@ const ConeLines = ({ coneHeight, coneRadius }) => {
         "position",
         new Float32BufferAttribute(vertices, 3)
       );
-      geometry.applyMatrix4(new Matrix4().makeRotationX(Math.PI / 2));
+      //geometry.applyMatrix4(new Matrix4().makeRotationX(Math.PI / 2));
       // Assign the geometry to the lines mesh
       linesRef.current.geometry = geometry;
     }
@@ -143,6 +143,7 @@ export default function BoxController() {
           maxPts={maxPts}
           dim={boxDim}
           particleSpeed={particleSpeed}
+          name={"box_" + index}
         />
       ))}
       <ConeLines coneHeight={coneHeight} coneRadius={coneRadius} />

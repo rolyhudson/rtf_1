@@ -18,9 +18,9 @@ function generatepositionsCube(countMin, countMax, dim) {
   const count = getRandomInt(countMin, countMax);
   const positions = new Float32Array(count * 3);
   for (let i = 0; i < count; i++) {
-    positions[i * 3] = (Math.random() - 0.5) * dim; // x
-    positions[i * 3 + 1] = (Math.random() - 0.5) * dim; // y
-    positions[i * 3 + 2] = (Math.random() - 0.5) * dim; // z
+    positions[i * 3] = Math.random() * dim - dim / 2; // x
+    positions[i * 3 + 1] = Math.random() * dim - dim / 2; // y
+    positions[i * 3 + 2] = Math.random() * dim - dim / 2; // z
   }
 
   return positions;
@@ -70,8 +70,8 @@ function LinesBetweenPoints(positions) {
   let lineCount = getRandomInt(ptCount, ptCount * 2);
 
   for (let i = 0; i < lineCount - 1; i++) {
-    let start = getRandomInt(0, ptCount);
-    let end = getRandomInt(0, ptCount);
+    let start = getRandomInt(0, ptCount - 1);
+    let end = getRandomInt(0, ptCount - 1);
     while (start === end) end = getRandomInt(0, ptCount);
 
     lineData.push({ start: start, end: end });
@@ -86,12 +86,13 @@ export default function BoxParticles({
   minPts,
   dim,
   particleSpeed,
+  name,
 }) {
   //const { points, setPoints } = usePoints();
   const positions = generatepositionsCube(minPts, maxPts, dim);
   LinesBetweenPoints(positions);
   particleData = [];
-  for (const p of positions) {
+  for (let i = 0; i < positions.length / 3; i++) {
     particleData.push({
       velocity: new Vector3(
         -particleSpeed / 2 + Math.random() * particleSpeed,
@@ -124,29 +125,38 @@ export default function BoxParticles({
 
   useFrame(() => {
     const rHalf = dim / 2;
-    //console.log(center);
+    //console.log("animating: " + name);
     for (let i = 0; i < positions.length / 3; i++) {
       // get the particle
       const pData = particleData[i];
+
+      const loc = new Vector3(
+        positions[i * 3],
+        positions[i * 3 + 1],
+        positions[i * 3 + 2]
+      );
+      console.log("animating: " + name);
+      let sql = loc.lengthSq();
+      // if (name == "box_1") {
+      //   debugger;
+      // }
+      // if (loc.lengthSq() > rHalf * rHalf) {
+      //   pData.velocity.y = -pData.velocity.y;
+
+      //   pData.velocity.x = -pData.velocity.x;
+
+      //   pData.velocity.z = -pData.velocity.z;
+      // }
+      if (Math.abs(positions[i * 3 + 1]) > rHalf)
+        pData.velocity.y = -pData.velocity.y;
+      if (Math.abs(positions[i * 3]) > rHalf)
+        pData.velocity.x = -pData.velocity.x;
+      if (Math.abs(positions[i * 3 + 2]) > rHalf)
+        pData.velocity.z = -pData.velocity.z;
+
       positions[i * 3] += pData.velocity.x;
       positions[i * 3 + 1] += pData.velocity.y;
       positions[i * 3 + 2] += pData.velocity.z;
-
-      if (
-        positions[i * 3 + 1] < center.y - rHalf ||
-        positions[i * 3 + 1] > center.y + rHalf
-      )
-        pData.velocity.y = -pData.velocity.y;
-      if (
-        positions[i * 3] < center.x - rHalf ||
-        positions[i * 3] > center.x + rHalf
-      )
-        pData.velocity.x = -pData.velocity.x;
-      if (
-        positions[i * 3 + 2] < center.z - rHalf ||
-        positions[i * 3 + 2] > center.z + rHalf
-      )
-        pData.velocity.z = -pData.velocity.z;
     }
     const lineCoords = new Float32Array(lineData.length * 6);
     for (let i = 0; i < lineData.length; i++) {
@@ -177,7 +187,7 @@ export default function BoxParticles({
   useEffect(() => {
     if (groupRef.current) {
       groupRef.current.position.set(center.x, center.y, center.z); // Translate the group to the box centre
-      groupRef.current.applyMatrix4(new Matrix4().makeRotationX(-Math.PI / 2));
+      //groupRef.current.applyMatrix4(new Matrix4().makeRotationX(-Math.PI / 2));
     }
   }, [center]);
 
