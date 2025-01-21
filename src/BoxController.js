@@ -39,7 +39,7 @@ const ConeLines = ({ coneHeight, coneRadius }) => {
         "position",
         new Float32BufferAttribute(vertices, 3)
       );
-      //geometry.applyMatrix4(new Matrix4().makeRotationX(Math.PI / 2));
+      geometry.applyMatrix4(new Matrix4().makeRotationX(-Math.PI / 2));
       // Assign the geometry to the lines mesh
       linesRef.current.geometry = geometry;
     }

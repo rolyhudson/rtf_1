@@ -92,7 +92,7 @@ export default function BoxParticles({
   const positions = generatepositionsCube(minPts, maxPts, dim);
   LinesBetweenPoints(positions);
   particleData = [];
-  for (let i = 0; i < positions.length / 3; i++) {
+  for (const p in positions) {
     particleData.push({
       velocity: new Vector3(
         -particleSpeed / 2 + Math.random() * particleSpeed,
@@ -129,13 +129,13 @@ export default function BoxParticles({
     for (let i = 0; i < positions.length / 3; i++) {
       // get the particle
       const pData = particleData[i];
-
+      if (pData === undefined) debugger;
       const loc = new Vector3(
         positions[i * 3],
         positions[i * 3 + 1],
         positions[i * 3 + 2]
       );
-      console.log("animating: " + name);
+
       let sql = loc.lengthSq();
       // if (name == "box_1") {
       //   debugger;
@@ -187,7 +187,7 @@ export default function BoxParticles({
   useEffect(() => {
     if (groupRef.current) {
       groupRef.current.position.set(center.x, center.y, center.z); // Translate the group to the box centre
-      //groupRef.current.applyMatrix4(new Matrix4().makeRotationX(-Math.PI / 2));
+      groupRef.current.applyMatrix4(new Matrix4().makeRotationX(-Math.PI / 2));
     }
   }, [center]);
 
