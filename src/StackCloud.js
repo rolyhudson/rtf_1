@@ -14,6 +14,7 @@ import { LookAtObj } from "./LookAtObj";
 /***************************************************/
 
 function positionsInCone(coneHeight, coneRadius, n) {
+  //sets out positions of each stack centroid in the cone
   const positions = [];
 
   for (let i = 0; i < n; i++) {
@@ -44,6 +45,7 @@ function positionsInStack(
   maxPts,
   particleSpeed
 ) {
+  //for each stack centroid we generate n random points in a sphere of radius stackRad around each centroid
   const positions = [];
 
   for (let i = 0; i < stackPositions.length; i++) {
@@ -80,6 +82,7 @@ function getRandomInt(min, max) {
 /***************************************************/
 
 function centroid(points) {
+  //centroid of array of THREE.Vector3
   let x = 0;
   let y = 0;
   let z = 0;
@@ -95,6 +98,7 @@ function centroid(points) {
 /***************************************************/
 
 function hsvToRgb(h, s, v) {
+  //convert hsv to rgb
   let r, g, b;
   let i = Math.floor(h * 6);
   let f = h * 6 - i;
@@ -141,6 +145,7 @@ function hsvToRgb(h, s, v) {
 /***************************************************/
 
 function cloudGeometry(positions) {
+  //comput buffer geometry for points
   const bufferGeo = new BufferGeometry();
   const vertices = [];
   const colors = [];
@@ -152,6 +157,7 @@ function cloudGeometry(positions) {
 
     // Convert HSV to RGB
     let [r, g, b] = hsvToRgb(hue, 1, 1);
+    //add a colour
     colors.push(r, g, b, 0.5);
     p++;
   });
@@ -163,6 +169,8 @@ function cloudGeometry(positions) {
 /***************************************************/
 
 function stackLineGeometry(positions, lineData) {
+  // compute buffer geometry for lines with a each stack
+  //inputs are 2d arrays of points for each stack or start end indices
   const bufferGeo = new BufferGeometry();
   const lineCoords = new Float32Array(lineData.flat().length * 6);
   let i = 0;
@@ -194,6 +202,8 @@ function stackLineGeometry(positions, lineData) {
 /***************************************************/
 
 function setStackLineIndices(positions) {
+  //compute indices for lines within a stack
+  //indices don't update unless stack point counts are updated
   const lineIndices = [];
   for (const cluster of positions) {
     const clusterIndices = [];
@@ -216,12 +226,15 @@ function setStackLineIndices(positions) {
 /***************************************************/
 
 function interStackLineGeometry(positions, lineData) {
+  //buffer geometry for lines between stacks
   const bufferGeo = new BufferGeometry();
   const lineCoords = new Float32Array(lineData.flat().length * 6);
   let i = 0;
 
   for (const cluster of lineData) {
+    //each cluster is a set of lines that link between stacks
     for (const line of cluster) {
+      //get the start and end point clusters
       const ptStartData = positions[line.startCluster];
       const ptEndData = positions[line.endCluster];
       if (ptStartData === undefined || ptEndData === undefined) continue;
@@ -230,6 +243,7 @@ function interStackLineGeometry(positions, lineData) {
       let end = line.end;
       if (ptStartData.length - 1 < start || ptEndData.length - 1 < end)
         continue;
+      //assign coords to the array
       lineCoords[i * 6] = ptStartData[start].location.x;
       lineCoords[i * 6 + 1] = ptStartData[start].location.y;
       lineCoords[i * 6 + 2] = ptStartData[start].location.z;
@@ -247,16 +261,21 @@ function interStackLineGeometry(positions, lineData) {
 /***************************************************/
 
 function setInterStackLineIndices(positions, stackOrder) {
+  //indices of lines between stacks
+  //stackOrder could be as computed or ordered by distance from origin
   const lineIndices = [];
-  //order is cluster order from origin
+
   for (let i = 0; i < stackOrder.length - 1; i++) {
     const startIndex = stackOrder[i];
     const endIndex = stackOrder[i + 1];
+    //get start and end stacks
     const startStack = positions[startIndex];
     const endStack = positions[endIndex];
+    //random number of lines
     let lineCount = getRandomInt(1, 5);
     const spanIndices = [];
     for (let i = 0; i < lineCount; i++) {
+      //random index from start and end stack
       let start = getRandomInt(0, startStack.length - 1);
       let end = getRandomInt(0, endStack.length - 1);
 
@@ -264,6 +283,7 @@ function setInterStackLineIndices(positions, stackOrder) {
       const index = spanIndices.findIndex(
         (pair) => pair.start === start && pair.end === end
       );
+      //storing point indices plus the stack indices for simple processing on the buffer geometry
       if (index === -1)
         spanIndices.push({
           startCluster: startIndex,
@@ -280,6 +300,7 @@ function setInterStackLineIndices(positions, stackOrder) {
 /***************************************************/
 
 function Scene() {
+  //helper to add axes to scene
   const axesRef = useRef();
 
   useEffect(() => {
@@ -308,6 +329,8 @@ function getStackOrder(positions) {
 }
 
 export default function StackCloud() {
+  //component that does the work
+  //input values defined in StackControls
   const {
     maxPts,
     minPts,
@@ -318,6 +341,9 @@ export default function StackCloud() {
     particleSpeed,
   } = StackControls();
 
+  /***********************/
+  //state consts and
+  //useEffects for managing update sequence
   /***********************/
 
   const [stackPositions, setStackPositions] = useState([]);
@@ -399,27 +425,35 @@ export default function StackCloud() {
   /***********************/
 
   useFrame(() => {
+    //this updates point positions based on velocity
     const dataUpdate = [];
     const sqStackDim = stackDim * stackDim;
+    //particlData is 2d array of location and velocity for points in each stack
     for (const cluster of particleData) {
       const clusterUpdate = [];
       const locations = cluster.map((obj) => obj.location);
+      //compute centroid of cluster
       const clusterCentroid = centroid(locations);
       for (const element of cluster) {
+        //new position add location and speed
         const newPos = element.location.add(element.speed);
+        //get sqdist from centroid
         const sqDist = clusterCentroid.distanceToSquared(newPos);
+        //if point is beyond stackRad reverse speed as a bounce off sphere bound
         if (sqDist > sqStackDim) {
           clusterUpdate.push({
             location: newPos,
             speed: element.speed.negate(),
           });
-        } else {
+        }
+        //otherwise add new pos and old speed
+        else {
           clusterUpdate.push({ location: newPos, speed: element.speed });
         }
       }
       dataUpdate.push(clusterUpdate);
     }
-
+    //call to update the state
     setParticleData(dataUpdate);
   });
 
