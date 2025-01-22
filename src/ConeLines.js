@@ -1,13 +1,5 @@
-import React, { useRef, useState, useEffect } from "react";
-import {
-  Vector3,
-  ConeGeometry,
-  Matrix4,
-  LineSegments,
-  LineBasicMaterial,
-  BufferGeometry,
-  Float32BufferAttribute,
-} from "three";
+import React, { useRef, useEffect } from "react";
+import { BufferGeometry, Float32BufferAttribute } from "three";
 
 /***************************************************/
 
@@ -44,7 +36,7 @@ export default function ConeLines({ coneHeight, coneRadius }) {
 
   return (
     <lineSegments ref={linesRef}>
-      <lineBasicMaterial color="blue" transparent opacity={0.1} />
+      <lineBasicMaterial color="cyan" transparent opacity={0.5} />
     </lineSegments>
   );
 }

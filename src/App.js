@@ -11,10 +11,13 @@ import StackCloud from "./StackCloud";
 export default function App() {
   return (
     <div className="App">
-      <Canvas camera={{ position: [0, 10, 5] }}>
+      <Canvas
+        camera={{ position: [100, 0, 75] }}
+        style={{ background: "black" }}
+      >
         {/* <BoxController /> */}
         <StackCloud />
-        <OrbitControls />
+        <OrbitControls target={[50, 0, 0]} />
         {/* <ThreeContent /> */}
       </Canvas>
     </div>

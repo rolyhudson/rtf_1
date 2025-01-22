@@ -1,18 +1,15 @@
 import React, { useRef, useState, useEffect } from "react";
-import { useControls } from "leva";
 import {
   Vector3,
-  ConeGeometry,
-  Matrix4,
-  LineSegments,
-  LineBasicMaterial,
   BufferGeometry,
   Float32BufferAttribute,
   AxesHelper,
 } from "three";
 import ConeLines from "./ConeLines";
+import TransparentCone from "./TransparentCone";
 import { StackControls } from "./StackControls";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
+import { LookAtObj } from "./LookAtObj";
 
 /***************************************************/
 
@@ -97,19 +94,75 @@ function centroid(points) {
 
 /***************************************************/
 
+function hsvToRgb(h, s, v) {
+  let r, g, b;
+  let i = Math.floor(h * 6);
+  let f = h * 6 - i;
+  let p = v * (1 - s);
+  let q = v * (1 - f * s);
+  let t = v * (1 - (1 - f) * s);
+
+  switch (i % 6) {
+    case 0:
+      r = v;
+      g = t;
+      b = p;
+      break;
+    case 1:
+      r = q;
+      g = v;
+      b = p;
+      break;
+    case 2:
+      r = p;
+      g = v;
+      b = t;
+      break;
+    case 3:
+      r = p;
+      g = q;
+      b = v;
+      break;
+    case 4:
+      r = t;
+      g = p;
+      b = v;
+      break;
+    case 5:
+      r = v;
+      g = p;
+      b = q;
+      break;
+  }
+
+  return [r, g, b];
+}
+
+/***************************************************/
+
 function cloudGeometry(positions) {
   const bufferGeo = new BufferGeometry();
   const vertices = [];
+  const colors = [];
+  let p = 0;
+  let totalElements = positions.flat().length;
   positions.flat().forEach((element) => {
     vertices.push(element.location.x, element.location.y, element.location.z);
+    let hue = 0.9 + (p / totalElements) * 0.17; // Vary hue between 0.83 (300°) and 1.0 (360° or 0°)
+
+    // Convert HSV to RGB
+    let [r, g, b] = hsvToRgb(hue, 1, 1);
+    colors.push(r, g, b, 0.5);
+    p++;
   });
   bufferGeo.setAttribute("position", new Float32BufferAttribute(vertices, 3));
+  bufferGeo.setAttribute("color", new Float32BufferAttribute(colors, 3));
   return bufferGeo;
 }
 
 /***************************************************/
 
-function lineGeometry(positions, lineData) {
+function stackLineGeometry(positions, lineData) {
   const bufferGeo = new BufferGeometry();
   const lineCoords = new Float32Array(lineData.flat().length * 6);
   let i = 0;
@@ -134,18 +187,19 @@ function lineGeometry(positions, lineData) {
   }
 
   bufferGeo.setAttribute("position", new Float32BufferAttribute(lineCoords, 3));
+  bufferGeo.computeBoundingSphere();
   return bufferGeo;
 }
 
 /***************************************************/
 
-function setLineIndices(positions) {
+function setStackLineIndices(positions) {
   const lineIndices = [];
   for (const cluster of positions) {
     const clusterIndices = [];
     const ptCount = cluster.length;
     let lineCount = getRandomInt(1, ptCount * 2);
-    for (let i = 0; i < lineCount - 1; i++) {
+    for (let i = 0; i < lineCount; i++) {
       let start = getRandomInt(0, ptCount - 1);
       let end = getRandomInt(0, ptCount - 1);
       while (start === end) end = getRandomInt(0, ptCount - 1);
@@ -155,6 +209,70 @@ function setLineIndices(positions) {
       if (index === -1) clusterIndices.push({ start: start, end: end });
     }
     lineIndices.push(clusterIndices);
+  }
+  return lineIndices;
+}
+
+/***************************************************/
+
+function interStackLineGeometry(positions, lineData) {
+  const bufferGeo = new BufferGeometry();
+  const lineCoords = new Float32Array(lineData.flat().length * 6);
+  let i = 0;
+
+  for (const cluster of lineData) {
+    for (const line of cluster) {
+      const ptStartData = positions[line.startCluster];
+      const ptEndData = positions[line.endCluster];
+      if (ptStartData === undefined || ptEndData === undefined) continue;
+
+      let start = line.start;
+      let end = line.end;
+      if (ptStartData.length - 1 < start || ptEndData.length - 1 < end)
+        continue;
+      lineCoords[i * 6] = ptStartData[start].location.x;
+      lineCoords[i * 6 + 1] = ptStartData[start].location.y;
+      lineCoords[i * 6 + 2] = ptStartData[start].location.z;
+      lineCoords[i * 6 + 3] = ptEndData[end].location.x;
+      lineCoords[i * 6 + 4] = ptEndData[end].location.y;
+      lineCoords[i * 6 + 5] = ptEndData[end].location.z;
+
+      i++;
+    }
+  }
+  bufferGeo.setAttribute("position", new Float32BufferAttribute(lineCoords, 3));
+  return bufferGeo;
+}
+
+/***************************************************/
+
+function setInterStackLineIndices(positions, stackOrder) {
+  const lineIndices = [];
+  //order is cluster order from origin
+  for (let i = 0; i < stackOrder.length - 1; i++) {
+    const startIndex = stackOrder[i];
+    const endIndex = stackOrder[i + 1];
+    const startStack = positions[startIndex];
+    const endStack = positions[endIndex];
+    let lineCount = getRandomInt(1, 5);
+    const spanIndices = [];
+    for (let i = 0; i < lineCount; i++) {
+      let start = getRandomInt(0, startStack.length - 1);
+      let end = getRandomInt(0, endStack.length - 1);
+
+      while (start === end) end = getRandomInt(0, endStack.length - 1);
+      const index = spanIndices.findIndex(
+        (pair) => pair.start === start && pair.end === end
+      );
+      if (index === -1)
+        spanIndices.push({
+          startCluster: startIndex,
+          endCluster: endIndex,
+          start: start,
+          end: end,
+        });
+    }
+    lineIndices.push(spanIndices);
   }
   return lineIndices;
 }
@@ -174,6 +292,20 @@ function Scene() {
 }
 
 /***************************************************/
+
+function getStackOrder(positions) {
+  // Step 1: Calculate distances from the origin and store with original indices
+  const vectorsWithDistances = positions.map((vector, index) => {
+    const distance = vector.lengthSq(); // Distance from the origin (0, 0, 0)
+    return { index, distance };
+  });
+  // Step 2: Sort the array of objects by distance
+  vectorsWithDistances.sort((a, b) => a.distance - b.distance);
+
+  // Step 3: Extract the sorted indices
+  const sortedIndices = vectorsWithDistances.map((item) => item.index);
+  return sortedIndices;
+}
 
 export default function StackCloud() {
   const {
@@ -197,10 +329,19 @@ export default function StackCloud() {
 
   /***********************/
 
+  const [stackOrder, setStackOrder] = useState([]);
+
+  useEffect(() => {
+    if (stackPositions.length === 0) return;
+    setStackOrder(getStackOrder(stackPositions));
+  }, [stackPositions]);
+
+  /***********************/
+
   const [particleData, setParticleData] = useState([]);
 
   useEffect(() => {
-    if (stackPositions.length == 0) return;
+    if (stackPositions.length === 0) return;
     setParticleData(
       positionsInStack(stackPositions, stackDim, minPts, maxPts, particleSpeed)
     );
@@ -211,24 +352,48 @@ export default function StackCloud() {
   const [cloudBuffer, setCloudBuffer] = useState(new BufferGeometry());
 
   useEffect(() => {
-    if (particleData.length == 0) return;
+    if (particleData.length === 0) return;
     setCloudBuffer(cloudGeometry(particleData));
   }, [particleData]);
 
-  const [lineData, setLineData] = useState([]);
+  /***********************/
+
+  const [stackLineData, setStackLineData] = useState([]);
 
   useEffect(() => {
-    if (particleData.length == 0) return;
-    setLineData(setLineIndices(particleData));
+    if (particleData.length === 0) return;
+    setStackLineData(setStackLineIndices(particleData));
   }, [particleData.flat().length]);
 
   /***********************/
 
-  const [lineBuffer, setLineBuffer] = useState(new BufferGeometry());
+  const [stackLineBuffer, setStackLineBuffer] = useState(new BufferGeometry());
 
   useEffect(() => {
-    if (particleData.length == 0 || lineData.length == 0) return;
-    setLineBuffer(lineGeometry(particleData, lineData));
+    if (particleData.length === 0 || stackLineData.length === 0) return;
+    setStackLineBuffer(stackLineGeometry(particleData, stackLineData));
+  }, [particleData]);
+
+  /***********************/
+
+  const [interStackLineData, setInterStackLineData] = useState([]);
+
+  useEffect(() => {
+    if (particleData.length === 0) return;
+    setInterStackLineData(setInterStackLineIndices(particleData, stackOrder));
+  }, [particleData.flat().length]);
+
+  /***********************/
+
+  const [interStackLineBuffer, setInterStackLineBuffer] = useState(
+    new BufferGeometry()
+  );
+
+  useEffect(() => {
+    if (particleData.length === 0 || interStackLineData.length === 0) return;
+    setInterStackLineBuffer(
+      interStackLineGeometry(particleData, interStackLineData)
+    );
   }, [particleData]);
 
   /***********************/
@@ -258,14 +423,27 @@ export default function StackCloud() {
     setParticleData(dataUpdate);
   });
 
+  /***********************/
+
   return (
     <>
+      <ambientLight intensity={0.5} />
+      <pointLight position={[10, 10, 10]} />
       <points visible geometry={cloudBuffer}>
-        <pointsMaterial attach="material" color="black" size={0.2} />
+        <pointsMaterial attach="material" vertexColors size={0.2} />
       </points>
-      <ConeLines coneHeight={coneHeight} coneRadius={coneRadius} />
-      <lineSegments geometry={lineBuffer}>
-        <lineBasicMaterial attach="material" color="black" />
+      <TransparentCone
+        coneHeight={coneHeight}
+        coneRadius={coneRadius}
+        thickness={1}
+        color={"skyblue"}
+        opacity={0.2}
+      />
+      <lineSegments geometry={stackLineBuffer}>
+        <lineBasicMaterial attach="material" color="white" />
+      </lineSegments>
+      <lineSegments geometry={interStackLineBuffer}>
+        <lineBasicMaterial color="white" transparent opacity={0.2} />
       </lineSegments>
       <Scene />
     </>
