@@ -18,7 +18,7 @@ function TextComponent(props) {
       {...props}
       ref={ref}
       scale={clicked ? 1.5 : 1}
-      color={hovered ? "hotpink" : "orange"}
+      color={hovered ? "hotpink" : "blue"}
       onClick={(event) => click(!clicked)}
       onPointerOver={(event) => (event.stopPropagation(), hover(true))}
       onPointerOut={(event) => hover(false)}

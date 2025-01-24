@@ -81,7 +81,7 @@ export default function App() {
         <Route path="/lines" element={<LinesPage />} />
         <Route path="/boxcontroller" element={<BoxControllerPage />} />
         <Route path="/texture" element={<TexturePage />} />
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/rtf_1/" element={<LandingPage />} />
       </Routes>
     </Router>
   );
