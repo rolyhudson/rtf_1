@@ -8,6 +8,7 @@ import ThreeContent from "./Render1";
 import BoxParticles from "./BoxParticles";
 import BoxController from "./BoxController";
 import StackCloud from "./StackCloud";
+import LandingPage from "./LandingPage";
 
 function StackCloudPage() {
   return (
@@ -80,7 +81,7 @@ export default function App() {
         <Route path="/lines" element={<LinesPage />} />
         <Route path="/boxcontroller" element={<BoxControllerPage />} />
         <Route path="/texture" element={<TexturePage />} />
-        <Route path="/" element={<div>futures</div>} />
+        <Route path="/" element={<LandingPage />} />
       </Routes>
     </Router>
   );
