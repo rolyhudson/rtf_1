@@ -9,6 +9,8 @@ import BoxParticles from "./BoxParticles";
 import BoxController from "./BoxController";
 import StackCloud from "./StackCloud";
 import LandingPage from "./LandingPage";
+import LocoScroll from "./LocoScroll";
+import Scroll2 from "./Scroll2";
 
 function StackCloudPage() {
   return (
@@ -74,6 +76,12 @@ export default function App() {
           <li>
             <Link to="/texture">TexturePage</Link>
           </li>
+          <li>
+            <Link to="/scroll">LocoScroll</Link>
+          </li>
+          <li>
+            <Link to="/scroll2">Scroll2</Link>
+          </li>
         </ul>
       </nav>
       <Routes>
@@ -82,6 +90,8 @@ export default function App() {
         <Route path="/boxcontroller" element={<BoxControllerPage />} />
         <Route path="/texture" element={<TexturePage />} />
         <Route path="/rtf_1/" element={<LandingPage />} />
+        <Route path="/scroll" element={<LocoScroll />} />
+        <Route path="/scroll2" element={<Scroll2 />} />
       </Routes>
     </Router>
   );
