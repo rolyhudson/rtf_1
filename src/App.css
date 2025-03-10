@@ -21,6 +21,32 @@
   text-decoration: underline; /* Optional: underline the link on hover */
 }
 
+/* Parallax Navigation */
+.parallax-nav {
+  position: fixed;
+  top: 20px;
+  background: transparent;
+  z-index: 1000;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.parallax-nav li {
+  cursor: pointer;
+  padding: 5px 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: background 0.3s;
+  color: white;
+}
+
+.parallax-nav li:hover {
+  background: #f0f0f0;
+}
+
 /*! locomotive-scroll v4.1.3 | MIT License | https://github.com/locomotivemtl/locomotive-scroll */
 
 html.has-scroll-smooth {
@@ -105,5 +131,48 @@ html.has-scroll-dragging {
   bottom: 0;
 }
 .scroll {
-  padding: 0 0 200vh;
+  padding: 0;
+}
+
+/* styles for react-scroll-parallax */
+.banner {
+  height: 100vh;
+  background: #bbe8f6;
+}
+
+main {
+  height: 300vh;
+}
+
+.title-div {
+  position: absolute;
+  top: 25%; /* 30% from the top */
+  left: 10%; /* 20% from the left */
+  width: 100%;
+  text-align: left;
+  font-weight: bold;
+}
+
+.text-div {
+  position: absolute;
+  top: 50%; /* 30% from the top */
+  left: 30%; /* 20% from the left */
+  width: 100%;
+  text-align: left;
+  font-weight: 200;
+}
+
+.highlighted-text {
+  display: inline-block;
+  font-size: 2rem; /* Adjust the size as needed */
+  color: white;
+  font-style: italic;
+  word-wrap: break-word; /* Ensure long words break and wrap to the next line */
+}
+
+.highlighted-text span {
+  display: inline-block;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px; /* Padding around the text */
+  margin-bottom: 10px; /* Gap between lines */
 }

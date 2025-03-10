@@ -11,6 +11,38 @@ import StackCloud from "./StackCloud";
 import LandingPage from "./LandingPage";
 import LocoScroll from "./LocoScroll";
 import Scroll2 from "./Scroll2";
+import Parallax from "./Parallax";
+
+import texture from "./img/texture.png";
+import glitch from "./img/glitch.png";
+import subject from "./img/subject.png";
+import texture_1 from "./img/texture_1.png";
+import glitch_1 from "./img/glitch_1.png";
+import subject_1 from "./img/subject_1.png";
+
+const blocks = [
+  {
+    texture: texture,
+    glitch: glitch,
+    subject: subject,
+    text: "resides in the realm between the possible and impossible",
+    charLimit: 30,
+  },
+  {
+    texture: texture_1,
+    glitch: glitch_1,
+    subject: subject_1,
+    text: "we are an experimental design studio that summons the unknown to awaken something new",
+    charLimit: 30,
+  },
+  {
+    texture: texture,
+    glitch: glitch_1,
+    subject: subject,
+    text: "activate the users senses by blending the analog and digital worlds, curating experiences that transcend the expected",
+    charLimit: 30,
+  },
+];
 
 function StackCloudPage() {
   return (
@@ -82,6 +114,9 @@ export default function App() {
           <li>
             <Link to="/scroll2">Scroll2</Link>
           </li>
+          <li>
+            <Link to="/scroll3">Scroll3</Link>
+          </li>
         </ul>
       </nav>
       <Routes>
@@ -92,6 +127,7 @@ export default function App() {
         <Route path="/rtf_1/" element={<LandingPage />} />
         <Route path="/scroll" element={<LocoScroll />} />
         <Route path="/scroll2" element={<Scroll2 />} />
+        <Route path="/scroll3" element={<Parallax blocks={blocks} />} />
       </Routes>
     </Router>
   );

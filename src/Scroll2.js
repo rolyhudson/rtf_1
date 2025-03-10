@@ -2,6 +2,9 @@ import { LocomotiveScrollProvider } from "react-locomotive-scroll";
 import { useRef } from "react";
 import backgroundImage1 from "./img/TestBG1.jpg";
 import backgroundImage2 from "./img/TestBG2.jpg";
+import backgroundImage3 from "./img/TestBG3.jpg";
+import Block from "./Block";
+import OverlayImages from "./OverlayImages";
 
 const Scroll2 = () => {
   const containerRef = useRef(null);
@@ -12,7 +15,12 @@ const Scroll2 = () => {
       containerRef={containerRef}
     >
       <div className="scroll" ref={containerRef} data-scroll-container>
-        <div data-scroll-section>
+        <OverlayImages
+          imageUrls={[backgroundImage1, backgroundImage2, backgroundImage3]}
+        />
+        {/* <Block imageUrl={backgroundImage1} />
+        <Block imageUrl={backgroundImage2} /> */}
+        {/* <div data-scroll-section>
           <h1 data-scroll data-scroll-speed="3" data-scroll-position="top">
             <img
               src={backgroundImage1}
@@ -38,7 +46,7 @@ const Scroll2 = () => {
           <div data-scroll data-scroll-speed="-1" data-scroll-position="top">
             <p>This content moves in the opposite direction.</p>
           </div>
-        </div>
+        </div> */}
       </div>
     </LocomotiveScrollProvider>
   );
