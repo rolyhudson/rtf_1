@@ -11,10 +11,11 @@ export function LookAtObj(bufferGeo) {
     camDist * 2 // is is the far clip doubling ensures whole model is included
   );
   camera.position.set(
-    bufferGeo.boundingSphere.center.x + camDist,
+    bufferGeo.boundingSphere.center.x,
     bufferGeo.boundingSphere.center.y,
     bufferGeo.boundingSphere.center.z + camDist
   );
+  camera.lookAt(bufferGeo.boundingSphere.center);
 
   return camera;
 }
