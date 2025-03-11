@@ -463,20 +463,20 @@ export default function StackCloud() {
       <ambientLight intensity={0.5} />
       <pointLight position={[10, 10, 10]} />
       <points visible geometry={cloudBuffer}>
-        <pointsMaterial attach="material" vertexColors size={0.2} />
+        <pointsMaterial attach="material" vertexColors size={0.3} />
       </points>
       <TransparentCone
         coneHeight={coneHeight}
         coneRadius={coneRadius}
         thickness={1}
         color={"skyblue"}
-        opacity={0.2}
+        opacity={0.6}
       />
       <lineSegments geometry={stackLineBuffer}>
         <lineBasicMaterial attach="material" color="white" />
       </lineSegments>
       <lineSegments geometry={interStackLineBuffer}>
-        <lineBasicMaterial color="white" transparent opacity={0.2} />
+        <lineBasicMaterial color="white" transparent opacity={0.3} />
       </lineSegments>
 
       <Scene />
