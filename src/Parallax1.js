@@ -1,7 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import { ParallaxProvider } from "react-scroll-parallax";
 import Block from "./Block";
 import StackCloudPage from "./StackCloudPage";
+
+const componentMapping = {
+  block: Block,
+  stackCloudPage: StackCloudPage,
+  //anotherComponent: AnotherComponent, // Example of another component
+};
 
 const Parallax1 = ({ blocks }) => {
   const sectionRefs = useRef([]);
@@ -26,22 +32,18 @@ const Parallax1 = ({ blocks }) => {
           </ul>
         </nav>
         <header>
-          {blocks.map((block, index) => (
-            <div
-              key={index}
-              className="block-container"
-              ref={(el) => (sectionRefs.current[index] = el)}
-            >
-              <Block
-                texture={block.texture}
-                glitch={block.glitch}
-                subject={block.subject}
-                text={block.text}
-                charLimit={block.charLimit}
-              />
-            </div>
-          ))}
-          <StackCloudPage />
+          {blocks.map((block, index) => {
+            const Component = componentMapping[block.type];
+            return (
+              <div
+                key={index}
+                className="block-container"
+                ref={(el) => (sectionRefs.current[index] = el)}
+              >
+                {Component && <Component {...block.props} />}
+              </div>
+            );
+          })}
         </header>
       </ParallaxProvider>
     </main>

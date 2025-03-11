@@ -14,26 +14,36 @@ import subject_1 from "./img/subject_1.png";
 
 const blocks = [
   {
-    texture: texture,
-    glitch: glitch,
-    subject: subject,
-    text: "resides in the realm between the possible and impossible",
-    charLimit: 30,
+    type: "block",
+    props: {
+      texture: texture,
+      glitch: glitch,
+      subject: subject,
+      text: "resides in the realm between the possible and impossible",
+      charLimit: 30,
+    },
   },
   {
-    texture: texture_1,
-    glitch: glitch_1,
-    subject: subject_1,
-    text: "we are an experimental design studio that summons the unknown to awaken something new",
-    charLimit: 30,
+    type: "block",
+    props: {
+      texture: texture_1,
+      glitch: glitch_1,
+      subject: subject_1,
+      text: "we are an experimental design studio that summons the unknown to awaken something new",
+      charLimit: 30,
+    },
   },
   {
-    texture: texture,
-    glitch: glitch_1,
-    subject: subject,
-    text: "activate the users senses by blending the analog and digital worlds, curating experiences that transcend the expected",
-    charLimit: 30,
+    type: "block",
+    props: {
+      texture: texture,
+      glitch: glitch_1,
+      subject: subject,
+      text: "activate the users senses by blending the analog and digital worlds, curating experiences that transcend the expected",
+      charLimit: 30,
+    },
   },
+  { type: "stackCloudPage", props: {} },
 ];
 
 export default function App() {
