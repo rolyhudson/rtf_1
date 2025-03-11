@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import StackCloudPage from "./StackCloudPage";
 import "./App.css";
@@ -46,7 +46,24 @@ const blocks = [
   { type: "stackCloudPage", props: {} },
 ];
 
+// Fisher-Yates (Knuth) Shuffle Algorithm
+const shuffleArray = (array) => {
+  let shuffledArray = array.slice(); // Create a copy of the array
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  }
+  return shuffledArray;
+};
+
 export default function App() {
+  const [shuffledBlocks, setShuffledBlocks] = useState([]);
+
+  useEffect(() => {
+    // Shuffle blocks on component mount
+    setShuffledBlocks(shuffleArray(blocks));
+  }, [blocks]);
+
   return (
     <Router>
       <nav className="horizontal-nav">
@@ -55,12 +72,16 @@ export default function App() {
             <Link to="/seq_01">seq_01</Link>
           </li>
           <li>
+            <Link to="/seq_02">seq_02</Link>
+          </li>
+          <li>
             <Link to="/f_cone">f_cone</Link>
           </li>
         </ul>
       </nav>
       <Routes>
         <Route path="/seq_01" element={<Parallax1 blocks={blocks} />} />
+        <Route path="/seq_02" element={<Parallax1 blocks={shuffledBlocks} />} />
         <Route path="/f_cone" element={<StackCloudPage />} />
       </Routes>
     </Router>
