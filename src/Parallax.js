@@ -67,7 +67,7 @@ const Parallax = ({ blocks }) => {
   };
   //
   return (
-    <main ref={containerRef} style={{ overflowY: "scroll", height: "100vh" }}>
+    <main ref={containerRef} style={{ overflowY: "scroll", height: "300vh" }}>
       <ParallaxProvider>
         <nav>
           <ul className="parallax-nav">
