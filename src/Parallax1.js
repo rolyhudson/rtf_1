@@ -34,6 +34,7 @@ const Parallax1 = ({ blocks }) => {
         <header>
           {blocks.map((block, index) => {
             const Component = componentMapping[block.type];
+
             return (
               <div
                 key={index}

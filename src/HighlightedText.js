@@ -2,14 +2,11 @@ import React, { useEffect, useRef } from "react";
 
 const HighlightedText = ({ text, maxChar, divName }) => {
   const textContainerRef = useRef(null);
+
   useEffect(() => {
-    // Function to wrap words in a span
-    const wrapWordsInSpans = () => {
-      const container = textContainerRef.current;
-      if (!container) return;
-      const words = container.innerText.split(" ");
-      let currentLine = "";
+    const wrapWordsInSpans = (words, maxChar) => {
       const lines = [];
+      let currentLine = "";
 
       words.forEach((word) => {
         if ((currentLine + word).length > maxChar) {
@@ -23,22 +20,17 @@ const HighlightedText = ({ text, maxChar, divName }) => {
         lines.push(currentLine.trim());
       }
 
-      container.innerHTML = lines
-        .map((line) => `<span>${line}</span>`)
-        .join("<br>");
+      return lines.map((line) => `<span>${line}</span>`).join("<br>");
     };
 
-    // Call the function to wrap words in spans
-    wrapWordsInSpans();
-  }, []);
+    const container = textContainerRef.current;
+    if (!container) return;
 
-  return (
-    <div className={divName}>
-      <div className="highlighted-text" ref={textContainerRef}>
-        {text}
-      </div>
-    </div>
-  );
+    const words = text.split(" ");
+    container.innerHTML = wrapWordsInSpans(words, maxChar);
+  }, [text, maxChar]);
+
+  return <div className={divName} ref={textContainerRef}></div>;
 };
 
 export default HighlightedText;

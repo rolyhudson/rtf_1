@@ -75,19 +75,15 @@ main {
   font-weight: 200;
 }
 
-.highlighted-text {
-  display: inline-block;
-  font-size: 2rem; /* Adjust the size as needed */
-  color: white;
-  font-style: italic;
-  word-wrap: break-word; /* Ensure long words break and wrap to the next line */
-}
-
-.highlighted-text span {
+span {
   display: inline-block;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 5px; /* Padding around the text */
   margin-bottom: 10px; /* Gap between lines */
+  font-size: 2rem; /* Adjust the size as needed */
+  color: white;
+  font-style: italic;
+  word-wrap: break-word;
 }
 .leva-container {
   position: absolute;
