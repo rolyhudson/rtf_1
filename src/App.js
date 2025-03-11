@@ -1,16 +1,8 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
-import Lines from "./Lines";
-import Particles from "./Particles";
-import ThreeContent from "./Render1";
-import BoxParticles from "./BoxParticles";
-import BoxController from "./BoxController";
-import StackCloud from "./StackCloud";
-import LandingPage from "./LandingPage";
-import LocoScroll from "./LocoScroll";
-import Scroll2 from "./Scroll2";
+import StackCloudPage from "./StackCloudPage";
+import "./App.css";
+
 import Parallax1 from "./Parallax1";
 
 import texture from "./img/texture.png";
@@ -44,20 +36,6 @@ const blocks = [
   },
 ];
 
-function StackCloudPage() {
-  return (
-    <div className="App">
-      <Canvas
-        camera={{ position: [100, 0, 75] }}
-        style={{ background: "black" }}
-      >
-        <StackCloud />
-        <OrbitControls target={[50, 0, 0]} />
-      </Canvas>
-    </div>
-  );
-}
-
 export default function App() {
   return (
     <Router>
@@ -66,10 +44,14 @@ export default function App() {
           <li>
             <Link to="/seq_01">seq_01</Link>
           </li>
+          <li>
+            <Link to="/f_cone">f_cone</Link>
+          </li>
         </ul>
       </nav>
       <Routes>
         <Route path="/seq_01" element={<Parallax1 blocks={blocks} />} />
+        <Route path="/f_cone" element={<StackCloudPage />} />
       </Routes>
     </Router>
   );

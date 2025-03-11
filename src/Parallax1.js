@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ParallaxProvider } from "react-scroll-parallax";
 import Block from "./Block";
+import StackCloudPage from "./StackCloudPage";
 
 const Parallax1 = ({ blocks }) => {
   const sectionRefs = useRef([]);
@@ -40,6 +41,7 @@ const Parallax1 = ({ blocks }) => {
               />
             </div>
           ))}
+          <StackCloudPage />
         </header>
       </ParallaxProvider>
     </main>

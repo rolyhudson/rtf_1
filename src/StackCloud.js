@@ -6,11 +6,9 @@ import {
   AxesHelper,
 } from "three";
 
-import ConeLines from "./ConeLines";
 import TransparentCone from "./TransparentCone";
 import { StackControls } from "./StackControls";
 import { useFrame, useThree } from "@react-three/fiber";
-import { LookAtObj } from "./LookAtObj";
 
 /***************************************************/
 
@@ -480,6 +478,7 @@ export default function StackCloud() {
       <lineSegments geometry={interStackLineBuffer}>
         <lineBasicMaterial color="white" transparent opacity={0.2} />
       </lineSegments>
+
       <Scene />
     </>
   );
