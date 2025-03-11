@@ -52,9 +52,19 @@
   height: 100vh;
   background: #bbe8f6;
 }
+html {
+  background: black;
+}
+
+canvas {
+  width: 100vw;
+  height: 100vh;
+}
 
 main {
   height: 300vh;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .title-div {

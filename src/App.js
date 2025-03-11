@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import StackCloudPage from "./StackCloudPage";
 import "./App.css";
-
+import ParticleScene from "./ParticleScene";
 import Parallax1 from "./Parallax1";
 
 import texture from "./img/texture.png";
@@ -69,6 +69,9 @@ export default function App() {
       <nav className="horizontal-nav">
         <ul>
           <li>
+            <Link to="/rtf_1">futures</Link>
+          </li>
+          <li>
             <Link to="/seq_01">seq_01</Link>
           </li>
           <li>
@@ -80,6 +83,7 @@ export default function App() {
         </ul>
       </nav>
       <Routes>
+        <Route path="/rtf_1" element={<ParticleScene />} />
         <Route path="/seq_01" element={<Parallax1 blocks={blocks} />} />
         <Route path="/seq_02" element={<Parallax1 blocks={shuffledBlocks} />} />
         <Route path="/f_cone" element={<StackCloudPage />} />
