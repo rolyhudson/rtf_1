@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import StackCloudPage from "./StackCloudPage";
 import "./App.css";
 import ParticleScene from "./ParticleScene";
+import ParticleFlow from "./ParticleFlow";
 import Parallax1 from "./Parallax1";
 
 import texture from "./img/texture.png";
@@ -80,6 +81,9 @@ export default function App() {
           <li>
             <Link to="/f_cone">f_cone</Link>
           </li>
+          <li>
+            <Link to="/p_flow">p_flow</Link>
+          </li>
         </ul>
       </nav>
       <Routes>
@@ -87,6 +91,7 @@ export default function App() {
         <Route path="/seq_01" element={<Parallax1 blocks={blocks} />} />
         <Route path="/seq_02" element={<Parallax1 blocks={shuffledBlocks} />} />
         <Route path="/f_cone" element={<StackCloudPage />} />
+        <Route path="/p_flow" element={<ParticleFlow />} />
       </Routes>
     </Router>
   );
