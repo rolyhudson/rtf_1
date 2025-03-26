@@ -4,6 +4,7 @@ import StackCloudPage from "./StackCloudPage";
 import "./App.css";
 import ParticleScene from "./ParticleScene";
 import ParticleFlow from "./ParticleFlow";
+import ParticleSingle from "./ParticleSingle";
 import Parallax1 from "./Parallax1";
 
 import texture from "./img/texture.png";
@@ -91,7 +92,7 @@ export default function App() {
         <Route path="/seq_01" element={<Parallax1 blocks={blocks} />} />
         <Route path="/seq_02" element={<Parallax1 blocks={shuffledBlocks} />} />
         <Route path="/f_cone" element={<StackCloudPage />} />
-        <Route path="/p_flow" element={<ParticleFlow />} />
+        <Route path="/p_flow" element={<ParticleSingle />} />
       </Routes>
     </Router>
   );
