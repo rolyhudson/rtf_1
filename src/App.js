@@ -46,6 +46,7 @@ const blocks = [
     },
   },
   { type: "stackCloudPage", props: {} },
+  { type: "pFlow", props: {} },
 ];
 
 // Fisher-Yates (Knuth) Shuffle Algorithm

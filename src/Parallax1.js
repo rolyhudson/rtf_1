@@ -2,10 +2,12 @@ import React, { useRef } from "react";
 import { ParallaxProvider } from "react-scroll-parallax";
 import Block from "./Block";
 import StackCloudPage from "./StackCloudPage";
+import ParticlesScene from "./ParticleSingle";
 
 const componentMapping = {
   block: Block,
   stackCloudPage: StackCloudPage,
+  pFlow: ParticlesScene,
   //anotherComponent: AnotherComponent, // Example of another component
 };
 
