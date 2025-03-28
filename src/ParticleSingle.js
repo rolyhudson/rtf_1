@@ -5,7 +5,12 @@ import CameraController from "./CameraController";
 import Emitter from "./Emitter";
 import * as THREE from "three";
 
-const SingleParticleFlow = ({ emitterWidth, emitterHeight, startX }) => {
+export const SingleParticleFlow = ({
+  emitterWidth,
+  emitterHeight,
+  startX,
+  startY,
+}) => {
   const points = useRef();
 
   const particleSpeed = useMemo(() => {
@@ -19,7 +24,10 @@ const SingleParticleFlow = ({ emitterWidth, emitterHeight, startX }) => {
 
   //set original X and Y
   const originalY = useMemo(() => {
-    return (Math.random() - 0.5) * emitterHeight;
+    if (startY == null) {
+      return (Math.random() - 0.5) * emitterHeight;
+    }
+    return startY;
   }, [emitterHeight]);
 
   const originalZ = useMemo(() => {
@@ -52,7 +60,7 @@ const SingleParticleFlow = ({ emitterWidth, emitterHeight, startX }) => {
     const positions = new Float32Array(nParticles * 3); // 30 particles in the trail
     const speeds = new Float32Array(nParticles); // 30 particles in the trail
     for (let i = 0; i < nParticles; i++) {
-      const x = startX + i * 0.01; // Slightly offset each particle in X axis to create a trail effect
+      const x = startX + i * 0.02; // Slightly offset each particle in X axis to create a trail effect
 
       positions.set([x, originalY, originalZ], i * 3);
       speeds[i] = particleSpeed;

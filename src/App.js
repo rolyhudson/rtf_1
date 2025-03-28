@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import StackCloudPage from "./StackCloudPage";
 import "./App.css";
 import ParticleScene from "./ParticleScene";
-import ParticleFlow from "./ParticleFlow";
+import SkillsPage from "./SkillsPage";
 import ParticleSingle from "./ParticleSingle";
 import Parallax1 from "./Parallax1";
 
@@ -47,6 +47,7 @@ const blocks = [
   },
   { type: "stackCloudPage", props: {} },
   { type: "pFlow", props: {} },
+  { type: "fSkills", props: {} },
 ];
 
 // Fisher-Yates (Knuth) Shuffle Algorithm
@@ -86,6 +87,9 @@ export default function App() {
           <li>
             <Link to="/p_flow">p_flow</Link>
           </li>
+          <li>
+            <Link to="/skills">f_skills</Link>
+          </li>
         </ul>
       </nav>
       <Routes>
@@ -94,6 +98,7 @@ export default function App() {
         <Route path="/seq_02" element={<Parallax1 blocks={shuffledBlocks} />} />
         <Route path="/f_cone" element={<StackCloudPage />} />
         <Route path="/p_flow" element={<ParticleSingle />} />
+        <Route path="/skills" element={<SkillsPage />} />
       </Routes>
     </Router>
   );
