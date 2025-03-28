@@ -129,10 +129,10 @@ export default function SkillsPage() {
           const y = particlePositions[skillIndex];
 
           return (
-            <React.Fragment key={skill}>
+            <React.Fragment>
               {particlesArray.map((_, particleIndex) => (
                 <SingleParticleFlow
-                  key={`${skillIndex}-${particleIndex}`}
+                  key={particleIndex}
                   emitterWidth={0}
                   emitterHeight={y}
                   startY={y}
