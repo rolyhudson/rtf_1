@@ -6,6 +6,7 @@ import ParticleScene from "./ParticleScene";
 import SkillsPage from "./SkillsPage";
 import ParticleSingle from "./ParticleSingle";
 import Parallax1 from "./Parallax1";
+import ConicLines from "./cory";
 
 import texture from "./img/texture.png";
 import glitch from "./img/glitch.png";
@@ -90,6 +91,10 @@ export default function App() {
           <li>
             <Link to="/skills">f_skills</Link>
           </li>
+
+          <li>
+            <Link to="/conicLines">conicLines</Link>
+          </li>
         </ul>
       </nav>
       <Routes>
@@ -99,6 +104,7 @@ export default function App() {
         <Route path="/f_cone" element={<StackCloudPage />} />
         <Route path="/p_flow" element={<ParticleSingle />} />
         <Route path="/skills" element={<SkillsPage />} />
+        <Route path="/conicLines" element={<ConicLines />} />
       </Routes>
     </Router>
   );
